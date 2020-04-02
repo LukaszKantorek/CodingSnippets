@@ -38,6 +38,18 @@ namespace CodingSnippets.MultidimensionalArray.Tests
         }
 
         [Test]
+        public void Should_flatten_multidimensional_array_of_numbers_and_remove_duplicates()
+        {
+            var arrayWithNumbers = new object[] { 1, 1, 1, 2, 3, new[] { 4, 5, 5, 5, 6 } };
+
+            var flatArray = arrayWithNumbers.ToFlattenArray();
+
+            var expectedFlatList = new object[] { 1, 2, 3, 4, 5, 6 };
+
+            Assert.AreEqual(expectedFlatList, flatArray);
+        }
+
+        [Test]
         public void Should_flatten_more_complicated_multidimensional_array_of_numbers()
         {
             var arrayWithNumbers = new object[] { 1, 2, new object[] { 3, 4 , new[] { 5, 6 } } };

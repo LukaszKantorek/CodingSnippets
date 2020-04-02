@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CodingSnippets.MultidimensionalArray
 {
@@ -6,25 +8,40 @@ namespace CodingSnippets.MultidimensionalArray
     {
         public static IEnumerable<object> ToFlattenArray(this object itemsArrayToFlat)
         {
-            var arrayWithObjects = NotNullableArray
-                .Init(itemsArrayToFlat);
-            
-            return IterateThroughDimentions(arrayWithObjects);
+            try
+            {
+                var arrayWithObjects = NotNullableArray
+                    .Init(itemsArrayToFlat);
+
+                var flattenArray = new HashSet<object>();
+
+                IterateThroughDimentions(arrayWithObjects, flattenArray);
+
+                return flattenArray;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e); 
+                throw;
+            }
         }
 
-        private static IEnumerable<object> IterateThroughDimentions(NotNullableArray arrayWithObjects)
+        private static void IterateThroughDimentions(NotNullableArray arrayWithObjects,
+            HashSet<object> flattenArray)
         {
             if (arrayWithObjects.IsLeafArray)
-                return arrayWithObjects;
-
-            var flattenArray = new List<object>();
+            {
+                flattenArray.Add(arrayWithObjects.First());
+                
+                return;
+            }
 
             foreach (var listElement in arrayWithObjects)
             {
-                flattenArray.AddRange(ToFlattenArray(listElement));
-            }
+                var notNullableArray = NotNullableArray.Init(listElement);
 
-            return flattenArray;
+                IterateThroughDimentions(notNullableArray, flattenArray);
+            }
         }
     }
 }
